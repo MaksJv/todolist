@@ -21,7 +21,6 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
 
-
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.formLogin(c -> {
@@ -40,17 +39,14 @@ public class SecurityConfig {
 
         http.exceptionHandling(customizer -> customizer
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-
-
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.sendError(HttpStatus.UNAUTHORIZED.value());
                 })
         );
 
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("error").permitAll()
+                .requestMatchers("/error").permitAll()
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/users/create").permitAll()
                 .requestMatchers("/").permitAll()
                 .anyRequest().authenticated());
 
