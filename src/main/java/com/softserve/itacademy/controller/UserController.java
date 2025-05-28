@@ -24,14 +24,14 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("user", new CreateUserDto());
         return "create-user";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create")
     public String create(@Validated @ModelAttribute("user") User user, BindingResult result) {
         if (result.hasErrors()) {
@@ -42,8 +42,8 @@ public class UserController {
         User newUser = userService.create(user);
         return "redirect:/todos/all/users/" + newUser.getId();
     }
-
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.details.id")
     @GetMapping("/{id}/read")
     public String read(@PathVariable long id, Model model) {
         User user = userService.readById(id);
@@ -51,7 +51,7 @@ public class UserController {
         return "user-info";
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.details.id")
     @GetMapping("/{id}/update")
     public String update(@PathVariable long id, Model model) {
         User user = userService.readById(id);
@@ -60,7 +60,7 @@ public class UserController {
         return "update-user";
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.details.id")
     @PostMapping("/{id}/update")
     public String update(@PathVariable long id, Model model,
                          @Validated @ModelAttribute("user") UpdateUserDto updateUserDto, BindingResult result) {
@@ -76,7 +76,7 @@ public class UserController {
         return "redirect:/users/" + id + "/read";
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.details.id")
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") long id) {
         User currentUser = userService.getCurrentUser();
@@ -89,7 +89,7 @@ public class UserController {
         return "redirect:/users/all";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     public String getAll(Model model) {
         model.addAttribute("users", userService.getAll());
