@@ -6,6 +6,12 @@ spring:
   h2.console.enabled: false
   sql.init.mode: always
 
+  datasource:
+    url: ${JDBC_LINK:jdbc:postgresql://localhost:5432/todolist}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
 spring.jpa.defer-datasource-initialization: true
 spring.jpa:
   show-sql: true
